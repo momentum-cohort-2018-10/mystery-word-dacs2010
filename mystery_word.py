@@ -10,6 +10,7 @@ with open("words.txt") as word_file:
         word_list = [extra.strip().upper() for extra in word_list]
     # print(word_list)
  
+
 def random_word(word_list):
     '''
     random word generator
@@ -19,54 +20,81 @@ def random_word(word_list):
         # and select a random word
         return random.choice(word_list)
 
-def win_condition(letters, game_word, correct_answer):
-    '''
-    check the letter against the game word, if they match user wins
-    '''
-    while correct_answer:
-        if letters == game_word:
-            correct_answer = True
-            print(correct_answer)
-            print("YOU WIN!!!")
-            break
-        else:
-            return False
 
-# def change_letters_to_blanks():
-#     for char in word 
-        
+# snagg clintons print instructions idea
+def print_instructions():
+    '''
+    prints the game instructions
+    '''
+    print(
+        "try to guess the mystery word,\nyou can guess incorrectly 8 times,\ngood luck!"
+        )  
+
+
+def make_game_board(game_word):
+    '''
+    take the char in the game word and prints out a string with a "_" for each character
+    '''
+    game_board = []
+    for _ in game_word:
+        game_board.append("_")
+    return game_board
+
+# not finished
+def replace_letters(guess, word, game_board):
+    '''
+    if guess is in word, then insert it into game board at the same index as the word "_"
+    '''
+    changes = game_board
+    for i in word:
+        if guess in word:
+            changes.insert(i, guess)
+            return changes
+
 
 def play_game(game_word):
     '''
     take user input and check it against a random word
     '''
     game_word = random_word(word_list)
-    print(game_word) # testing purposes (replace with "_" for letters function)
+    game_board = make_game_board(game_word)
+    print(game_word) # testing purposes
+    print(game_board)
+    answer = ""
     letters = ""
     guesses = 7
-    correct_answer = True
+    correct_answer = False
+    print_instructions()
     
-    # (can't exit loop... HELP)
-    while correct_answer is True or guesses > 0:
-        guess = input("type a letter => ").upper()
+    # (ok... i need to enter an extra guess to exit loop for win condition)
+    while not correct_answer or guesses > 0:
+        guess = input("type a letter => " + "\n").upper()
         print("You have",+ guesses, "tries left ")
+        
+        # win condition
+        if answer == game_word:
+            correct_answer = True
+            print("answer" + answer) # test
+            print("YOU WIN!!!")
+            return
 
         # correct guess
-        if guess in game_word:
+        elif guess in game_word:
+            # add guessed chars to the letters string
             letters = letters + guess
-            win_condition(letters, game_word, correct_answer)
+            answer = letters + answer
+            print("answer" + answer) # test
             print("Guessed letters => " + letters)
-            print("Good guess, try again \n")
+            print("Good guess!, try another! \n")
 
         # incorrect guess
-        elif guess not in game_word:
-            guesses -= 1
-            letters = letters + guess
-            win_condition(letters, game_word, correct_answer)
-            print("Guessed letters => " + letters)
-            print("No good, try again \n")
         else:
-            return
+            # declinate for each wrong guess (not working for initial guess)
+            guesses -= 1
+            # add chars letters to the letters string
+            letters = letters + guess
+            print("Guessed letters => " + letters)
+            print("No good, try again... \n")
 
 # call the game, the random word generator, and the word list            
 print(play_game(random_word(word_list)))
